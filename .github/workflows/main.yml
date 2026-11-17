@@ -6,6 +6,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: unzip -o AgeOfPowerForge_1.21.1_Improved.zip
+      - name: Fix 1.21.1 Java Syntax
+        run: |
+          sed -i 's/setSecondsOnFire(4)/igniteForSeconds(4)/g' src/main/java/com/ageofpower/mod/content/HeroPowerItem.java
+          sed -i 's/PacketFlow\.SERVERBOUND/NetworkDirection.PLAY_TO_SERVER/g' src/main/java/com/ageofpower/mod/network/ModNetwork.java
+          sed -i 's/net\.minecraft\.network\.protocol\.PacketFlow/net.minecraftforge.network.NetworkDirection/g' src/main/java/com/ageofpower/mod/network/ModNetwork.java
       - uses: actions/setup-java@v4
         with:
           java-version: '21'
@@ -13,7 +18,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '8.8'
-      - run: gradle build --refresh-dependencies
+      - run: gradle build
       - uses: actions/upload-artifact@v4
         with:
           name: Mod-Jar
